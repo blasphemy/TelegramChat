@@ -93,7 +93,7 @@ public class Main extends JavaPlugin implements Listener{
 		List<Integer> recievers = new ArrayList<Integer>();
 		recievers.addAll(Main.data.ids);
 		recievers.remove((Object) sender);
-		String msgF = Main.cfg.getString("chat-format").replace('&', '�').replace("%player%", op.getName()).replace("%message%", msg);
+		String msgF = Main.cfg.getString("chat-format").replace('&', '§').replace("%player%", op.getName()).replace("%message%", msg);
 		for(int id : recievers){
 			Telegram.sendMsg(id, msgF);
 		}
