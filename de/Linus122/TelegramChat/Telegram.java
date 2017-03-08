@@ -94,7 +94,7 @@ public class Telegram {
 								}
 							}
 							
-						}else if(chat.get("type").getAsString().equals("group")){
+						}else if(chat.get("type").getAsString().equals("group") || chat.get("type").getAsString().equals("supergroup")){
 							int id = chat.get("id").getAsInt();
 							if(!Main.data.ids.contains(id))
 								Main.data.ids.add(id);
