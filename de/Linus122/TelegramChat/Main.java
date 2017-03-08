@@ -88,19 +88,19 @@ public class Main extends JavaPlugin implements Listener{
 	public void onDisable(){
 		save();
 	}
-	public static void sendToMC(UUID uuid, String msg, int sender){
+	public static void sendToMC(UUID uuid, String msg, long sender){
 		OfflinePlayer op = Bukkit.getOfflinePlayer(uuid);
-		List<Integer> recievers = new ArrayList<Integer>();
+		List<Long> recievers = new ArrayList<Long>();
 		recievers.addAll(Main.data.ids);
 		recievers.remove((Object) sender);
 		String msgF = Main.cfg.getString("chat-format").replace('&', '§').replace("%player%", op.getName()).replace("%message%", msg);
-		for(int id : recievers){
+		for(long id : recievers){
 			Telegram.sendMsg(id, msgF);
 		}
 		Bukkit.broadcastMessage(msgF);
 	
 	}
-	public static void link(UUID player, int chatID){
+	public static void link(UUID player, long chatID){
 		Main.data.linkedChats.put(chatID, player);
 		OfflinePlayer p = Bukkit.getOfflinePlayer(player);
 		Telegram.sendMsg(chatID, "Success! Linked " + p.getName());
