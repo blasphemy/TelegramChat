@@ -60,7 +60,7 @@ public class Telegram {
 					if (obj.has("message")) {
 						JsonObject chat = obj.getAsJsonObject("message").getAsJsonObject("chat");
 						if(chat.get("type").getAsString().equals("private")){
-							int id = chat.get("id").getAsInt();
+							long id = chat.get("id").getAsLong();
 							if(!Main.data.ids.contains(id)) Main.data.ids.add(id);
 							
 							if(obj.getAsJsonObject("message").has("text")){
@@ -94,8 +94,8 @@ public class Telegram {
 								}
 							}
 							
-						}else if(chat.get("type").getAsString().equals("group")){
-							int id = chat.get("id").getAsInt();
+						}else if(chat.get("type").getAsString().equals("group") || chat.get("type").getAsString().equals("supergroup")){
+							long id = chat.get("id").getAsLong();
 							if(!Main.data.ids.contains(id))
 								Main.data.ids.add(id);
 						}
@@ -106,7 +106,7 @@ public class Telegram {
 		}
 	}
 	
-	public static void sendMsg(int id, String msg){
+	public static void sendMsg(long id, String msg){
 		Gson gson = new Gson();
 		Chat chat = new Chat();
 		chat.chat_id = id;
@@ -123,7 +123,7 @@ public class Telegram {
 		new Thread(new Runnable(){
 			public void run(){
 				Gson gson = new Gson();
-				for(int id : Main.data.ids){
+				for(long id : Main.data.ids){
 					chat.chat_id = id;
 					post("sendMessage", gson.toJson(chat, Chat.class));
 				}

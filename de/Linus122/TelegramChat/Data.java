@@ -8,9 +8,9 @@ import java.util.UUID;
 public class Data {
 	public String token = "";
 	//Player name // ChatID
-	public HashMap<Integer, UUID> linkedChats = new HashMap<Integer, UUID>();
+	public HashMap<Long, UUID> linkedChats = new HashMap<Long, UUID>();
 	//Player name // RandomInt
 	public HashMap<String, UUID> linkCodes = new HashMap<String, UUID>();
-	public static List<Integer> ids = new ArrayList<Integer>();
+	public static List<Long> ids = new ArrayList<Long>();
 	boolean firstUse = true;
 }
