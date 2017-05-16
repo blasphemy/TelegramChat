@@ -42,7 +42,6 @@ public class Main extends JavaPlugin implements Listener{
 		cfg = this.getConfig();
 		this.pl = this;
 		Bukkit.getPluginCommand("telegram").setExecutor(new TelegramCmd());
-		Bukkit.getPluginCommand("linktelegram").setExecutor(new LinkTelegramCmd());
 		Bukkit.getPluginManager().registerEvents(this, this);
 		File dir = new File("plugins/TelegramChat/");
 		dir.mkdir();
@@ -88,40 +87,9 @@ public class Main extends JavaPlugin implements Listener{
 	public void onDisable(){
 		save();
 	}
-	public static void sendToMC(UUID uuid, String msg, long sender){
-		OfflinePlayer op = Bukkit.getOfflinePlayer(uuid);
-		List<Long> recievers = new ArrayList<Long>();
-		recievers.addAll(Main.data.ids);
-		recievers.remove((Object) sender);
-		String msgF = Main.cfg.getString("chat-format").replace('&', '§').replace("%player%", op.getName()).replace("%message%", msg);
-		for(long id : recievers){
-			Telegram.sendMsg(id, msgF);
-		}
+	public static void sendToMC(String msg, String tgUsername){
+		String msgF = Main.cfg.getString("chat-format").replace('&', '§').replace("%player%", tgUsername).replace("%message%", msg);
 		Bukkit.broadcastMessage(msgF);
-	
-	}
-	public static void link(UUID player, long chatID){
-		Main.data.linkedChats.put(chatID, player);
-		OfflinePlayer p = Bukkit.getOfflinePlayer(player);
-		Telegram.sendMsg(chatID, "Success! Linked " + p.getName());
-	}
-	public static String generateLinkToken(){
-		Random rnd = new Random();
-		int i = rnd.nextInt(9999999);
-		String s = i + "";
-		String finals = "";
-		for(char m : s.toCharArray()){
-			int m2 = Integer.parseInt(m + "");
-			int rndi = rnd.nextInt(2);
-			if(rndi == 0){
-				m2+=97;
-				char c = (char) m2;
-				finals = finals + c;
-			}else{
-				finals = finals + m;
-			}
-		}
-		return finals;
 	}
 	@EventHandler
 	public void onJoin(PlayerJoinEvent e){
@@ -160,7 +128,7 @@ public class Main extends JavaPlugin implements Listener{
 		if(Telegram.connected){
 			Chat chat = new Chat();
 			chat.parse_mode = "Markdown";
-			chat.text = e.getPlayer().getName() + ": _" + e.getMessage() + "_";
+			chat.text = "*" + e.getPlayer().getName() + "*: " + e.getMessage();
 			Telegram.sendAll(chat);
 		}
 	}

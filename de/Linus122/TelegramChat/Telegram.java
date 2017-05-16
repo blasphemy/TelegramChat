@@ -58,66 +58,45 @@ public class Telegram {
 						lastUpdate = obj.get("update_id").getAsInt();
 					}
 					if (obj.has("message")) {
+					    String text;
 						JsonObject chat = obj.getAsJsonObject("message").getAsJsonObject("chat");
+						String username = obj.getAsJsonObject("message").getAsJsonObject("from").get("username").getAsString();
+						if (obj.getAsJsonObject("message").has("text")){
+						    text = obj.getAsJsonObject("message").get("text").getAsString();
+                        } else {
+						    return;
+                        }
+                        if (text.length() == 0) {
+						    return;
+                        }
 						if(chat.get("type").getAsString().equals("private")){
 							long id = chat.get("id").getAsLong();
 							if(!Main.data.ids.contains(id)) Main.data.ids.add(id);
-							
-							if(obj.getAsJsonObject("message").has("text")){
-								String text = obj.getAsJsonObject("message").get("text").getAsString();
-								for(char c : text.toCharArray()){
-									if((int) c == 55357){
-										Telegram.sendMsg(id, "Emoticons are not allowed, sorry!");
-										return;
-									}
-								}
-								if(text.length() == 0) return;
-								if(text.equals("/start")){
-									if(Main.data.firstUse){
-										Main.data.firstUse = false;
-										Chat chat2 = new Chat();
-										chat2.chat_id = id;
-										chat2.parse_mode = "Markdown";
-										chat2.text = "Congratulations, your bot is working! Have fun with this Plugin. Feel free to donate via *PayPal* to me if you like TelegramChat! [PayPal Donation URL](https://goo.gl/I02XGH)";
-										Telegram.sendMsg(chat2);
-									}
-									Telegram.sendMsg(id, "You can see the chat but you can't chat at the moment. Type /linktelegram ingame to chat!");
-								}else
-								if(Main.data.linkCodes.containsKey(text)){
-									//LINK
-									Main.link(Main.data.linkCodes.get(text), id);
-									Main.data.linkCodes.remove(text);
-								}else if(Main.data.linkedChats.containsKey(id)){
-									Main.sendToMC(Main.data.linkedChats.get(id), text, id);
-								}else{
-									Telegram.sendMsg(id, "Sorry, please link your account with /linktelegram ingame to use the chat!");
-								}
-							}
-							
 						}else if(chat.get("type").getAsString().equals("group") || chat.get("type").getAsString().equals("supergroup")){
 							long id = chat.get("id").getAsLong();
-							if(!Main.data.ids.contains(id))
-								Main.data.ids.add(id);
+							if(!Main.data.ids.contains(id)) {
+                                Main.data.ids.add(id);
+                            }
+                            Main.sendToMC(text, username);
 						}
 					}
-					
 				}
-			}	
+			}
 		}
 	}
-	
+
 	public static void sendMsg(long id, String msg){
 		Gson gson = new Gson();
 		Chat chat = new Chat();
 		chat.chat_id = id;
 		chat.text = msg;
 		post("sendMessage", gson.toJson(chat, Chat.class));
-		
+
 	}
 	public static void sendMsg(Chat chat){
 		Gson gson = new Gson();
 		post("sendMessage", gson.toJson(chat, Chat.class));
-		
+
 	}
 	public static void sendAll(final Chat chat){
 		new Thread(new Runnable(){
@@ -139,7 +118,7 @@ public class Telegram {
 			connection.setDoInput(true);
 			connection.setDoOutput(true);
 			connection.setUseCaches(false);
-			connection.setRequestProperty("Content-Type", "application/json; ; Charset=UTF-8");
+			connection.setRequestProperty("Content-Type", "application/json");
 			connection.setRequestProperty("Content-Length", String.valueOf(body.length()));
 
 			
@@ -162,6 +141,7 @@ public class Telegram {
 			writer.close();
 			reader.close();
 		} catch (Exception e) {
+		    System.out.print(e);
 			auth();
 			System.out.print("[Telegram] Disconnected from Telegram, reconnect...");
 		}
