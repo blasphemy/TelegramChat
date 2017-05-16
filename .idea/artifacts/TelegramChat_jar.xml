@@ -3,8 +3,8 @@
     <output-path>$PROJECT_DIR$/out/artifacts/TelegramChat_jar</output-path>
     <root id="archive" name="TelegramChat.jar">
       <element id="module-output" name="TelegramChat" />
+      <element id="extracted-dir" path="$USER_HOME$/spigot/Spigot/Spigot-API/target/spigot-api-1.11.2-R0.1-SNAPSHOT-shaded.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$MAVEN_REPOSITORY$/com/google/code/gson/gson/2.8.0/gson-2.8.0.jar" path-in-jar="/" />
-      <element id="extracted-dir" path="$PROJECT_DIR$/../spig/Spigot/Spigot-API/target/spigot-api-1.11.2-R0.1-SNAPSHOT-shaded.jar" path-in-jar="/" />
     </root>
   </artifact>
 </component>
